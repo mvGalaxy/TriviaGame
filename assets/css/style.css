@@ -1,0 +1,13 @@
+.Loser{
+    text-decoration: line-through;
+}
+
+.Winner{
+background-color: springgreen;
+    color: white;
+    font-size: xx-large;
+}
+
+button{
+    margin: 10px;
+}
