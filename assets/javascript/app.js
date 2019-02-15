@@ -1,6 +1,9 @@
-$(document).ready(()=>{
+$(document).ready(() => {
     console.log(3);
-    const trivia=[
+    $("#outOfTimeContainer").hide();
+    $("#congratsContainer").hide();
+
+    const trivia = [
         {
             question: 'What is the capital of Afghanistan?',
             answer: 'Kabul',
@@ -7572,48 +7575,125 @@ $(document).ready(()=>{
             ]
         }
     ];
-    function getTrivia(tr){
-        let randomTriviaIndex=Math.floor(Math.random()*tr.length);
+
+    function getTrivia(tr) {
+        let randomTriviaIndex = Math.floor(Math.random() * tr.length);
         return trivia[randomTriviaIndex];
     }
-    function consForm(t){
-        let choice=t.choices;
-        let q=t.question;
-        var s="<form>\n" +
-        `<h3 class=\"alert alert-info\">${q}</h3>\n`+
-        "<div class=\"form-check\">\n" +
-        `  <input class=\"form-check-input\" type=\"checkbox\" value=\"${choice[0]}\" id=\"0\">\n` +
-        "  <label class=\"form-check-label\" for=\"0\">\n" +
-            `    ${choice[0]}\n` +
-        "  </label>\n" +
-        "</div>\n" +
-        "  <div class=\"form-check\">\n" +
-        `  <input class=\"form-check-input\" type=\"checkbox\" value=\"${choice[1]}\" id=\"1\">\n` +
-        "  <label class=\"form-check-label\" for=\"1\">\n" +
-        `    ${choice[1]}\n` +
-        "  </label>\n" +
-        "</div>\n" +
-        "  <div class=\"form-check\">\n" +
-        `  <input class=\"form-check-input\" type=\"checkbox\" value=\"${choice[2]}\" id=\"2\">\n` +
-        "  <label class=\"form-check-label\" for=\"2\">\n" +
-        `    ${choice[2]}\n` +
-        "  </label>\n" +
-        "</div>\n" +
-        "  <div class=\"form-check\">\n" +
-        `  <input class=\"form-check-input\" type=\"checkbox\" value=\"${choice[3]}\" id=\"3\">\n` +
-        "  <label class=\"form-check-label\" for=\"d3\">\n" +
-        `    ${choice[3]}\n` +
-        "  </label>\n" +
-        "</div>\n" +
-        "<button id='btnNext' type=\"button\" class=\"btn btn-primary\">Next</button>\n"+
-        "<button id='btnLucky' type=\"button\" class=\"btn btn-warning\">I'm Feeling Lucky!</button>\n"+
-        "  </form>";
-    return s;
+
+    function consOutOfTime(ca){
+     return  "<div class=\"center\">\n" +
+         "<p class=\"outOfTimeComponent\">\n" +
+         "  OUT OF TIME\n" +
+         "</p>\n" +
+         `  <p class=\"outOfTimeComponent\">CORRECT ANSWER IS ${ca}</p>\n` +
+         "  </div>";
     }
+
+    function consForm(t) {
+        let choice = t.choices;
+        let q = t.question;
+        var s = "<form>\n" +
+            `<p id='timeLeft'></p>\n`+
+            `<h3>${q}</h3>\n` +
+            "<div class=\"form-check\">\n" +
+            `  <input class=\"form-check-input\" type=\"checkbox\" value=\"${choice[0]}\" id=\"0\">\n` +
+            "  <label class=\"form-check-label\" for=\"0\">\n" +
+            `    ${choice[0]}\n` +
+            "  </label>\n" +
+            "</div>\n" +
+            "  <div class=\"form-check\">\n" +
+            `  <input class=\"form-check-input\" type=\"checkbox\" value=\"${choice[1]}\" id=\"1\">\n` +
+            "  <label class=\"form-check-label\" for=\"1\">\n" +
+            `    ${choice[1]}\n` +
+            "  </label>\n" +
+            "</div>\n" +
+            "  <div class=\"form-check\">\n" +
+            `  <input class=\"form-check-input\" type=\"checkbox\" value=\"${choice[2]}\" id=\"2\">\n` +
+            "  <label class=\"form-check-label\" for=\"2\">\n" +
+            `    ${choice[2]}\n` +
+            "  </label>\n" +
+            "</div>\n" +
+            "  <div class=\"form-check\">\n" +
+            `  <input class=\"form-check-input\" type=\"checkbox\" value=\"${choice[3]}\" id=\"3\">\n` +
+            "  <label class=\"form-check-label\" for=\"d3\">\n" +
+            `    ${choice[3]}\n` +
+            "  </label>\n" +
+            "</div>\n" +
+            "  </form>\n" +
+            "<button id='btnLucky'>I'm Feeling Lucky!</button>\n" +
+            "<button id='btnNext' disabled>Next</button>\n";
+
+        return s;
+    }
+
+    function consCongrats(ans) {
+        let banners = "<h1 class=\"banner\">\n" +
+            "    <span class=\"flag\"></span>\n" +
+            "    <span class=\"flag\">C</span>\n" +
+            "    <span class=\"flag\">O</span>\n" +
+            "    <span class=\"flag\">N</span>\n" +
+            "    <span class=\"flag\">G</span>\n" +
+            "    <span class=\"flag\">R</span>\n" +
+            "    <span class=\"flag\">A</span>\n" +
+            "    <span class=\"flag\">T</span>\n" +
+            "    <span class=\"flag\">S</span>\n" +
+            "    <span class=\"flag\"></span>\n" +
+            "    <span class=\"string\">\n" +
+            "    <svg width=\"800\" height=\"230\" viewBox=\"0 0 800 230\">\n" +
+            "      <path fill=\"none\" d=\"M0,0 C100,100 700,200 800,100\" />\n" +
+            "    </svg>\n" +
+            "  </span>\n" +
+            "</h1>\n" +
+            `<p id=\"correctResponse\">${ans} is the correct response!</p>\n` +
+            "<h1 class=\"banner\">\n" +
+            "    <span class=\"flag\"></span>\n" +
+            "    <span class=\"flag\"></span>\n" +
+            "    <span class=\"flag\"></span>\n" +
+            "    <span class=\"flag\"></span>\n" +
+            "    <span class=\"flag\"></span>\n" +
+            "    <span class=\"flag\"></span>\n" +
+            "    <span class=\"flag\"></span>\n" +
+            "    <span class=\"flag\"></span>\n" +
+            "    <span class=\"flag\"></span>\n" +
+            "    <span class=\"flag\"></span>\n" +
+            "    <span class=\"string\">\n" +
+            "    <svg width=\"800\" height=\"230\" viewBox=\"0 0 800 230\">\n" +
+            "      <path fill=\"none\" d=\"M0,0 C100,100 700,200 800,100\" />\n" +
+            "    </svg>\n" +
+            "  </span>\n" +
+            "</h1>\n" +
+            "<script  src=\"assets/javascript/congrats.js\"></script>";
+        return banners;
+    }
+
+    function toggleGameContainer(ans,action){
+        let gameC=$("#gameContainer");
+        gameC.empty();
+        gameC.hide();
+
+        let a=action(ans);
+        a.hide(10000,()=>$("body").removeClass());
+
+        gameC.show(11000);
+
+
+    }
+
+    function showOutOfTime(ans){
+        let otc=$("#outOfTimeContainer");
+        ot.empty();
+        otc.show();
+        otc.append(consOutOfTime(ans));
+        $("body").addClass("outOfTime");
+        return otc;
+    }
+
+
     var Trivia = /** @class */ (function () {
         function Trivia(trv) {
 
-            console.log(this.gameStatus + "ddd");
+            //console.log(this.gameStatus + "ddd");
             this.question = trv.question;
             this.answer = trv.answer;
             this.choices = trv.choices;
@@ -7621,68 +7701,69 @@ $(document).ready(()=>{
             this.time = trv.time;
 
         }
+
         Trivia.prototype.guess = function (choice) {
             return choice == this.answer;
         };
         Trivia.prototype.setGameStatus = function (choice) {
+
+            this.usersGuess = choice;
             if (this.guess(choice)) {
                 this.gameStatus = "Won";
                 return;
-            }
-            else {
+            } else {
                 this.gameStatus = "Lost";
+
                 return;
             }
-            this.gameStatus="InPlay";
+            this.gameStatus = "InPlay";
         };
-
-
+        Trivia.prototype.canPickNext = () => {
+            return this.gameStatus == undefined ? false : true;
+        };
+        Trivia.prototype.canGuess = () => {
+            return this.canPickNext() ? false : true;
+        };
+        Trivia.prototype.doLuckyPick = () => {
+            return Math.floor(Math.random() * 4);
+        };
         return Trivia;
     }());
 
-    var newTrivia= {};
-console.log(newTrivia);
-    var secondsToCountFrom=30;
-    var timerManager=setInterval(triviaTimer,1000);
-    function triviaTimer () {
-        var d = new Date();
-        if(secondsToCountFrom<1){secondsToCountFrom=30;}
-        if(secondsToCountFrom>10 && secondsToCountFrom<=20){
-            $("#time").addClass("orange");
-        }
-        else{
-            $("#time").removeClass("orange");
-        }
-        if(secondsToCountFrom<10){
-            $("#time").addClass("red");
-        }
-        else{
-            $("#time").removeClass("red")
-        }
-        // $("#time").addClass("yellow").removeClass("yellow",2000);
+    var newTrivia = {};
+    //console.log(newTrivia);
 
-        document.getElementById("time").innerHTML =d.getSeconds()<60?secondsToCountFrom--:0;
-    };
 
-    function killTimer(){
-        clearInterval(timerManager);
-        $("#time").empty();
-    }
+    var timer = 20;
+    var interval;
+    var timerCancelled=false;
 
-    function restartTimer(){
-        timerManager = setInterval(triviaTimer,1000);
-    }
+    function startTimer(){
+    timer=20;
+    timerCancelled=false;
+    if(!interval){
+    interval  = setInterval(function() {
+        timer--;
+          $('#timeLeft').text(`Time left: ${timer}`);
 
-    function loadTrivia(){
+        if (timer === 0 && !timerCancelled) {
+            toggleGameContainer(newTrivia.answer,showOutOfTime);
+            loadTrivia();
+            clearInterval(interval);
+
+            timer=20;
+        }
+    }, 1000);}}
+
+    function loadTrivia() {
         newTrivia = new Trivia(getTrivia(trivia));
-        var formToInject=consForm(newTrivia);
-        $("body").append(formToInject);
+        var formToInject = consForm(newTrivia);
+        $("#gameContainer").append(formToInject);
         console.log(newTrivia);
-        secondsToCountFrom=30;
-        restartTimer();
+        startTimer();
     }
 
-     loadTrivia();
+    loadTrivia();
 
     function setViewResults(tg) {
         let c0 = $(`#0`);
@@ -7720,35 +7801,48 @@ console.log(newTrivia);
         }
     }
 
-    $("body").on("click",".form-check-input",(event)=>{
+    $("body").on("click", ".form-check-input", (event) => {
 
-         console.log(event.target.id);
-         let tg=newTrivia;
-         console.log($(`#${event.target.id}`).attr("value"));
-         console.log(tg.guess($(`#${event.target.id}`).attr("value")));
+       var userGuessed=$(`#${event.target.id}`).attr("value");
 
-         tg.setGameStatus($(`#${event.target.id}`).attr("value"));
-
-        setViewResults(tg);
-    });
-    //console.log(consForm(trivia[4]));
-    console.log(newTrivia);
-
-    $("body").on("click","#btnNext",()=>{
-        let tg2=newTrivia;
-        console.log(tg2);
-console.log("btnnext clicked");
-        console.log(tg2.gameStatus);
-        if(tg2.gameStatus==undefined){
-            tg2.setGameStatus("");
-            setViewResults(tg2);
-            killTimer();
-            setTimeout(()=>{}, 2000);
-            $("form").remove();
+        if (newTrivia.guess(userGuessed)) {
+            clearInterval(interval);
+            timerCancelled=true;
+            //interval=null;
+            console.log("after:");
+            console.log(interval);
+          toggleGameContainer(userGuessed,(a2)=>{
+              let cc=$("#congratsContainer");
+              cc.empty();
+               cc.append(consCongrats(a2)).show();
+               return cc;
+          });
+          console.log("reached this point?");
             loadTrivia();
+            return;
+            //  $("#congratsContainer").append(consCongrats(newTrivia.usersGuess)).show();
+        } else {
+            clearInterval(interval);
+
+            timerCancelled=true;
+            toggleGameContainer("WRONG!!",(a2)=>{
+                let cc=$("#congratsContainer");
+                cc.append(consCongrats(a2)).show();
+                return cc;
+            });
+            loadTrivia();
+            return;
+            //$("#congratsContainer").hide().empty().append(consCongrats("wrong")).show(300);
         }
+        //$("#congratsContainer").hide(10000);
 
+        //$("#gameContainer").append(consForm(new Trivia()));
 
+      //  $("#gameContainer").show(11000);
+        //setTimeout(loadTrivia,6400);
+        //setTimeout($("body").detach(),6000);
 
+        // injectForm();
     });
+
 });
