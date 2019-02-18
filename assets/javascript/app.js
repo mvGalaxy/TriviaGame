@@ -1,3 +1,4 @@
+"use strict";
 $(document).ready(() => {
     console.log(3);
     $("#outOfTimeContainer").hide();
@@ -7576,24 +7577,33 @@ $(document).ready(() => {
         }
     ];
 
+    function startTrivia(loadTriviaFunc){
+        var startScreen="<div id=\'startScreen\'>\n  " +
+            "  <h1>\n        Start Trivia\n    </h1>\n  " +
+            "  <button id=\'startButton\'>Start Trivia</button>\n</div>";
+        return startScreen;
+    }
+
     function getTrivia(tr) {
         let randomTriviaIndex = Math.floor(Math.random() * tr.length);
         return trivia[randomTriviaIndex];
     }
 
     function consOutOfTime(ca){
-     return  "<div class=\"center\">\n" +
-         "<p class=\"outOfTimeComponent\">\n" +
+     var outOfTimeSection=  "<div class=\"center\">\n" +
+         "<h2 class=\"outOfTimeComponent\">\n" +
          "  OUT OF TIME\n" +
-         "</p>\n" +
+         "</h2>\n" +
          `  <p class=\"outOfTimeComponent\">CORRECT ANSWER IS ${ca}</p>\n` +
          "  </div>";
+
+     return outOfTimeSection;
     }
 
     function consForm(t) {
         let choice = t.choices;
         let q = t.question;
-        var s = "<form>\n" +
+        var s1 = "<form>\n" +
             `<p id='timeLeft'></p>\n`+
             `<h3>${q}</h3>\n` +
             "<div class=\"form-check\">\n" +
@@ -7620,13 +7630,20 @@ $(document).ready(() => {
             `    ${choice[3]}\n` +
             "  </label>\n" +
             "</div>\n" +
-            "  </form>\n" +
-            "<button id='btnLucky'>I'm Feeling Lucky!</button>\n" +
-            "<button id='btnNext' disabled>Next</button>\n";
+            "  </form>\n";
 
-        return s;
+
+        return s1;
     }
 
+    function consWrong(ans){
+      var wrongAns="<div id=\'wrongSection\'>\n  " +
+          `  <h4>Sorry try again!</h4>\n   ` +
+          ` <p id=\'wrongResponseSection\'>\n   ` +
+          `    The correct response is ${ans}\n    </p>  `+
+          "  \n</div>\n";
+      return wrongAns;
+    }
     function consCongrats(ans) {
         let banners = "<h1 class=\"banner\">\n" +
             "    <span class=\"flag\"></span>\n" +
@@ -7676,16 +7693,15 @@ $(document).ready(() => {
         a.hide(10000,()=>$("body").removeClass());
 
         gameC.show(11000);
-
-
     }
 
     function showOutOfTime(ans){
         let otc=$("#outOfTimeContainer");
-        ot.empty();
+
+        otc.empty();
         otc.show();
         otc.append(consOutOfTime(ans));
-        $("body").addClass("outOfTime");
+       // $("body").addClass("outOfTime");
         return otc;
     }
 
@@ -7731,15 +7747,14 @@ $(document).ready(() => {
     }());
 
     var newTrivia = {};
-    //console.log(newTrivia);
 
-
-    var timer = 20;
+    var timer = 40;
     var interval;
     var timerCancelled=false;
 
     function startTimer(){
-    timer=20;
+    timer=40;
+    interval=false;
     timerCancelled=false;
     if(!interval){
     interval  = setInterval(function() {
@@ -7747,59 +7762,37 @@ $(document).ready(() => {
           $('#timeLeft').text(`Time left: ${timer}`);
 
         if (timer === 0 && !timerCancelled) {
-            toggleGameContainer(newTrivia.answer,showOutOfTime);
+
+            toggleGameContainer(newTrivia.answer,(ans)=>{
+             var outOfT=  showOutOfTime(ans);
+                return outOfT;
+            });
             loadTrivia();
             clearInterval(interval);
 
-            timer=20;
+            timer=40;
         }
     }, 1000);}}
 
+
+
     function loadTrivia() {
         newTrivia = new Trivia(getTrivia(trivia));
+
         var formToInject = consForm(newTrivia);
         $("#gameContainer").append(formToInject);
         console.log(newTrivia);
         startTimer();
     }
 
-    loadTrivia();
 
-    function setViewResults(tg) {
-        let c0 = $(`#0`);
-        let c1 = $(`#1`);
-        let c2 = $(`#2`);
-        let c3 = $(`#3`);
-        if (tg.guess(c0.attr("value"))) {
-            c0.addClass("Winner");
-            c0.next().addClass("Winner");
-        } else {
-            c0.addClass("Loser");
-            c0.next().addClass("Loser");
-        }
+    $("body").prepend(startTrivia(null));
+ //   loadTrivia();
 
-        if (tg.guess(c1.attr("value"))) {
-            c1.addClass("Winner");
-            c1.next().addClass("Winner");
-        } else {
-            c1.addClass("Loser");
-            c1.next().addClass("Loser");
-        }
-        if (tg.guess(c2.attr("value"))) {
-            c2.addClass("Winner");
-            c2.next().addClass("Winner");
-        } else {
-            c2.addClass("Loser");
-            c2.next().addClass("Loser");
-        }
-        if (tg.guess(c3.attr("value"))) {
-            c3.addClass("Winner");
-            c3.next().addClass("Winner");
-        } else {
-            c3.addClass("Loser");
-            c3.next().addClass("Loser");
-        }
-    }
+    $("body").on("click", "#startButton",()=>{
+        $("#startScreen").remove();
+        loadTrivia();
+    });
 
     $("body").on("click", ".form-check-input", (event) => {
 
@@ -7808,41 +7801,29 @@ $(document).ready(() => {
         if (newTrivia.guess(userGuessed)) {
             clearInterval(interval);
             timerCancelled=true;
-            //interval=null;
-            console.log("after:");
-            console.log(interval);
           toggleGameContainer(userGuessed,(a2)=>{
               let cc=$("#congratsContainer");
               cc.empty();
-               cc.append(consCongrats(a2)).show();
-               return cc;
+              cc.append(consCongrats(a2)).show();
+              return cc;
           });
           console.log("reached this point?");
             loadTrivia();
             return;
-            //  $("#congratsContainer").append(consCongrats(newTrivia.usersGuess)).show();
         } else {
             clearInterval(interval);
-
             timerCancelled=true;
-            toggleGameContainer("WRONG!!",(a2)=>{
+            toggleGameContainer(newTrivia.answer,(a2)=>{
                 let cc=$("#congratsContainer");
-                cc.append(consCongrats(a2)).show();
+                cc.empty();
+                cc.append(consWrong(a2)).show();
                 return cc;
             });
             loadTrivia();
             return;
-            //$("#congratsContainer").hide().empty().append(consCongrats("wrong")).show(300);
         }
-        //$("#congratsContainer").hide(10000);
 
-        //$("#gameContainer").append(consForm(new Trivia()));
-
-      //  $("#gameContainer").show(11000);
-        //setTimeout(loadTrivia,6400);
-        //setTimeout($("body").detach(),6000);
-
-        // injectForm();
     });
+
 
 });
